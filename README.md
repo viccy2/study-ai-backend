@@ -1,4 +1,4 @@
-# 📚 StudyAI: AI-Powered Academic application
+# 📚 StudyAI: AI-Powered Academic System
 
 A high-throughput FastAPI backend that leverages **OpenAI GPT-4o** and **Whisper-1** to transform unstructured academic data (PDFs and Audio) into structured study materials.
 
