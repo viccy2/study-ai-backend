@@ -1,27 +1,30 @@
-# StudyAI Backend 🚀
+# 📚 StudyAI: AI-Powered Academic Synthesis
 
-An AI-powered service that transforms PDFs and Audio recordings into structured study material (summaries and practice quizzes) using **FastAPI** and **OpenAI (GPT-4o & Whisper)**.
+A high-throughput FastAPI backend that leverages **OpenAI GPT-4o** and **Whisper-1** to transform unstructured academic data (PDFs and Audio) into structured study materials.
+
+---
+
+```text
+study-ai-backend/
+├── app/
+│   ├── main.py              # Entry point: FastAPI initialization & Routes
+│   ├── services/            # Business Logic Layer
+│   │   ├── __init__.py      # Package hoisting for clean imports
+│   │   ├── openai_service.py # LLM orchestration (Summaries/Quizzes)
+│   │   ├── pdf_service.py    # Document parsing logic (PyMuPDF)
+│   │   └── audio_service.py  # Transcription logic (Whisper)
+├── .env.example             # Template for API keys
+├── .gitignore               # Excludes secrets and junk files
+├── Dockerfile               # Production containerization
+├── requirements.txt         # Dependency manifest
+└── test_api.py              # Automated integration test script
 
 
+## 🛠️ Setup
+1. `pip install -r requirements.txt`
+2. Create `.env` with `OPENAI_API_KEY=your_key`
+3. Run: `python -m uvicorn app.main:app --reload`
 
-## ✨ Key Features
-- **PDF Extraction**: Automated text parsing from documents using PyMuPDF.
-- **Audio Transcription**: Speech-to-text processing for lectures via OpenAI Whisper.
-- **AI Synthesis**: Intelligent summarization and practice question generation.
-- **Asynchronous Design**: Built with FastAPI for high-performance I/O.
-
-## 🛠️ Tech Stack
-- **Framework**: FastAPI (Python)
-- **AI/ML**: OpenAI GPT-3.5-Turbo, Whisper-1
-- **File Processing**: PyMuPDF (fitz)
-- **DevOps**: Docker, Environment-based configuration
-
-## 🚀 Getting Started
-
-### 1. Clone & Setup
-```bash
-git clone
-cd study-ai-backend
-python -m venv venv
-source venv/bin/activate  # venv\Scripts\activate on Windows
-pip install -r requirements.txt
+## 🧪 Testing
+* **Interactive UI**: Visit `http://127.0.0.1:8000/`
+* **Script**: Run `python test_api.py`
