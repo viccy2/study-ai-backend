@@ -3,39 +3,52 @@ import requests
 BASE_URL = "http://127.0.0.1:8000"
 
 def test_health():
-    response = requests.get(f"{BASE_URL}/")
-    print(f"Health Check: {response.status_code} - {response.json()}")
+    """Verify the server is reachable."""
+    try:
+        response = requests.get(f"{BASE_URL}/")
+        print(f"📡 Health Check: {response.status_code} - {response.json()}")
+    except requests.exceptions.ConnectionError:
+        print("❌ Error: Is the FastAPI server running? (Try: uvicorn app.main:app)")
 
 def test_pdf_upload(file_path):
-    print(f"\nTesting PDF Upload: {file_path}...")
-    with open(file_path, "rb") as f:
-        files = {"pdf": f}
-        response = requests.post(f"{BASE_URL}/api/upload-pdf", files=files)
-    
-    if response.status_code == 200:
-        print("✅ Success!")
-        print(f"Summary: {response.json().get('summary')[:100]}...")
-    else:
-        print(f"❌ Failed: {response.text}")
+    """Test the PDF processing endpoint."""
+    print(f"\n📄 Testing PDF: {file_path}...")
+    try:
+        with open(file_path, "rb") as f:
+            # The key 'pdf' MUST match the parameter name in app/main.py
+            files = {"pdf": (file_path, f, "application/pdf")}
+            response = requests.post(f"{BASE_URL}/api/upload-pdf", files=files)
+        
+        if response.status_code == 200:
+            print("✅ Success!")
+            data = response.json()
+            print(f"Summary Snippet: {data.get('summary')[:150]}...")
+        else:
+            print(f"⚠️ Server returned {response.status_code}: {response.text}")
+    except FileNotFoundError:
+        print(f"❌ Error: File '{file_path}' not found.")
 
 def test_audio_upload(file_path):
-    print(f"\nTesting Audio Upload: {file_path}...")
-    with open(file_path, "rb") as f:
-        files = {"audio": f}
-        response = requests.post(f"{BASE_URL}/api/upload-audio", files=files)
-    
-    if response.status_code == 200:
-        print("✅ Success!")
-        print(f"Questions: {response.json().get('questions')[:100]}...")
-    else:
-        print(f"❌ Failed: {response.text}")
+    """Test the Audio processing endpoint."""
+    print(f"\n🎙️ Testing Audio: {file_path}...")
+    try:
+        with open(file_path, "rb") as f:
+            # The key 'audio' MUST match the parameter name in app/main.py
+            files = {"audio": (file_path, f, "audio/mpeg")}
+            response = requests.post(f"{BASE_URL}/api/upload-audio", files=files)
+        
+        if response.status_code == 200:
+            print("✅ Success!")
+            data = response.json()
+            print(f"Questions Snippet: {data.get('questions')[:150]}...")
+        else:
+            print(f"⚠️ Server returned {response.status_code}: {response.text}")
+    except FileNotFoundError:
+        print(f"❌ Error: File '{file_path}' not found.")
 
 if __name__ == "__main__":
-    # 1. Check if server is up
     test_health()
     
-    # 2. Test PDF (Ensure you have a file named 'test.pdf' in your folder)
-    # test_pdf_upload("test.pdf")
-    
-    # 3. Test Audio (Ensure you have a file named 'test.mp3' in your folder)
-    # test_audio_upload("test.mp3")
+    #  Ensure these files actually exist in your folder before running
+    # test_pdf_upload("sample_lecture.pdf")
+    # test_audio_upload("lecture_notes.mp3")
