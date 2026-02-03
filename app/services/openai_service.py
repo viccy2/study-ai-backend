@@ -1,28 +1,27 @@
 import openai
 import os
+import asyncio
 
 async def generate_study_material(text: str):
-    # Truncate to stay within token limits
-    context = text[:4000]
-    
-    # Using the modern OpenAI client (Async)
     client = openai.AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    context = text[:4000] # Safe token limit for GPT-3.5
     
-    summary_prompt = f"Summarize this: {context}"
-    quiz_prompt = f"Generate 5 questions with answers from this: {context}"
-    
-    # In a real FAANG setup, you'd run these in parallel with asyncio.gather
-    summary = await client.chat.completions.create(
+    # Running tasks in parallel to save time
+    summary_task = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": summary_prompt}]
+        messages=[{"role": "system", "content": "Summarize this text for a student."},
+                  {"role": "user", "content": context}]
     )
     
-    questions = await client.chat.completions.create(
+    quiz_task = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": quiz_prompt}]
+        messages=[{"role": "system", "content": "Generate 5 practice questions with answers."},
+                  {"role": "user", "content": context}]
     )
-    
+
+    summary_res, quiz_res = await asyncio.gather(summary_task, quiz_task)
+
     return {
-        "summary": summary.choices[0].message.content,
-        "questions": questions.choices[0].message.content
+        "summary": summary_res.choices[0].message.content,
+        "questions": quiz_res.choices[0].message.content
     }
