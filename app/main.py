@@ -3,7 +3,6 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-# Clean imports from our service package
 from app.services import extract_text_from_pdf, transcribe_audio, generate_study_material
 
 load_dotenv()
