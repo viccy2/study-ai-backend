@@ -20,11 +20,11 @@ study-ai-backend/
 └── test_api.py              # Automated integration test script
 
 
-## 🛠️ Setup
+## Setup
 1. `pip install -r requirements.txt`
 2. Create `.env` with `OPENAI_API_KEY=your_key`
 3. Run: `python -m uvicorn app.main:app --reload`
 
-## 🧪 Testing
+##  Testing
 * **Interactive UI**: Visit `http://127.0.0.1:8000/`
 * **Script**: Run `python test_api.py`
